@@ -1,0 +1,14 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-card">
+  <h1>Order Confirmed</h1>
+  <p>Thanks {{ customer_name }}, your order has been placed successfully.</p>
+  <p>Payment Method: <strong>{{ payment_method_label }}</strong></p>
+  {% if payment_id %}
+  <p>Payment ID: <strong>{{ payment_id }}</strong></p>
+  {% endif %}
+  <p class="price">Charged Amount: Rs {{ total|floatformat:2 }}</p>
+  <a class="btn" href="{% url 'products' %}">Continue Shopping</a>
+</section>
+{% endblock %}

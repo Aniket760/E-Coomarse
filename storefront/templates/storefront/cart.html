@@ -1,0 +1,54 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-head">
+  <h1>Your Cart</h1>
+</section>
+
+{% if items %}
+<div class="cart-wrap">
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Line Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>
+          {% if item.product.image %}
+          <img class="cart-product-image" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+          {% else %}
+          <span class="no-image">No image</span>
+          {% endif %}
+        </td>
+        <td>{{ item.product.name }}</td>
+        <td>${{ item.product.price|floatformat:2 }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ item.line_total|floatformat:2 }}</td>
+        <td>
+          <form method="post" action="{% url 'remove_from_cart' item.product.id %}">
+            {% csrf_token %}
+            <button class="btn btn-small" type="submit">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<section class="checkout-bar">
+  <p><strong>Total: ${{ total|floatformat:2 }}</strong></p>
+  <a class="btn" href="{% url 'checkout' %}">Proceed to Checkout</a>
+</section>
+{% else %}
+<p>Your cart is empty. Start from the <a href="{% url 'products' %}">products page</a>.</p>
+{% endif %}
+{% endblock %}

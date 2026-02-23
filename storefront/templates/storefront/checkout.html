@@ -1,0 +1,47 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-head">
+  <h1>Checkout</h1>
+  <p>Confirm your order details and place the order.</p>
+</section>
+
+<div class="checkout-grid">
+  <section class="page-card">
+    <h2>Order Summary</h2>
+    {% for item in items %}
+    <div class="checkout-item">
+      {% if item.product.image %}
+      <img class="checkout-product-image" src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+      {% endif %}
+      <p>{{ item.product.name }} x {{ item.quantity }} - Rs {{ item.line_total|floatformat:2 }}</p>
+    </div>
+    {% endfor %}
+    <p class="price">Total: Rs {{ total|floatformat:2 }}</p>
+  </section>
+
+  <section class="page-card">
+    <h2>Shipping Details</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label for="name">Full Name</label>
+      <input id="name" name="name" type="text" value="{{ initial_name }}" required />
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="{{ initial_email }}" required />
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="3" required>{{ initial_address }}</textarea>
+
+      <label for="payment_method">Payment Method</label>
+      <select id="payment_method" name="payment_method" required>
+        <option value="cod">{{ payment_methods.cod }}</option>
+        <option value="online">{{ payment_methods.online }}</option>
+      </select>
+      <p class="field-hint">For online payment, Razorpay supports UPI and debit cards.</p>
+
+      <button class="btn" type="submit">Place Order</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

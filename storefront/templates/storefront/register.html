@@ -1,0 +1,51 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-card auth-card">
+  <h1>Create Account</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for err in form.non_field_errors %}
+          <p class="field-error">{{ err }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label for="id_username">Username</label>
+      {{ form.username }}
+      {% if form.username.errors %}
+        {% for err in form.username.errors %}
+          <p class="field-error">{{ err }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_password1">Password</label>
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+        {% for err in form.password1.errors %}
+          <p class="field-error">{{ err }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="id_password2">Confirm Password</label>
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+        {% for err in form.password2.errors %}
+          <p class="field-error">{{ err }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <p class="field-hint">Use at least 8 characters for password.</p>
+    <button class="btn" type="submit">Register</button>
+  </form>
+  <p class="field-hint">Already have an account? <a href="{% url 'login' %}">Login</a>.</p>
+</section>
+{% endblock %}

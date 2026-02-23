@@ -1,0 +1,57 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-card">
+  <h1>Complete Online Payment</h1>
+  <p>Use UPI, debit card, credit card, or netbanking in the secure Razorpay popup.</p>
+  <p class="price">Amount: Rs {{ total|floatformat:2 }}</p>
+  <button id="pay-now" class="btn" type="button">Pay Now</button>
+  <p><a href="{% url 'checkout' %}">Back to checkout</a></p>
+
+  <form id="verify-form" method="post" action="{{ verify_url }}">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" />
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" />
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature" />
+  </form>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const options = {
+    key: "{{ razorpay_key_id }}",
+    amount: "{{ amount_subunits }}",
+    currency: "{{ currency }}",
+    name: "E-commarse",
+    description: "Order Payment",
+    order_id: "{{ razorpay_order_id }}",
+    handler: function (response) {
+      document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
+      document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
+      document.getElementById("razorpay_signature").value = response.razorpay_signature;
+      document.getElementById("verify-form").submit();
+    },
+    prefill: {
+      name: "{{ customer_name|escapejs }}",
+      email: "{{ customer_email|escapejs }}"
+    },
+    theme: {
+      color: "#0f766e"
+    },
+    modal: {
+      ondismiss: function () {
+        window.location.href = "{% url 'checkout' %}";
+      }
+    }
+  };
+
+  const rzp = new Razorpay(options);
+  document.getElementById("pay-now").addEventListener("click", function () {
+    rzp.open();
+  });
+
+  window.addEventListener("load", function () {
+    rzp.open();
+  });
+</script>
+{% endblock %}

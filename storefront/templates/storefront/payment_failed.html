@@ -1,0 +1,9 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="page-card">
+  <h1>Payment Failed</h1>
+  <p>{{ reason }}</p>
+  <a class="btn" href="{% url 'checkout' %}">Try Again</a>
+</section>
+{% endblock %}

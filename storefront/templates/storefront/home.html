@@ -1,0 +1,34 @@
+{% extends 'storefront/base.html' %}
+
+{% block content %}
+<section class="hero">
+  <h1>Shop Smart. Live Better.</h1>
+  <p>Discover premium essentials curated for everyday life.</p>
+  <a class="btn" href="{% url 'products' %}">Browse Products</a>
+</section>
+
+<section>
+  <h2>Featured Products</h2>
+  {% if featured_products %}
+  <div class="product-grid">
+    {% for product in featured_products %}
+    <article class="card">
+      {% if product.image %}
+      <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}" />
+      {% endif %}
+      <h3>{{ product.name }}</h3>
+      <p class="price">${{ product.price|floatformat:2 }}</p>
+      <p>{{ product.description }}</p>
+      <form method="post" action="{% url 'add_to_cart' product.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'home' %}" />
+        <button class="btn" type="submit">Add to Cart</button>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No featured products yet. Add products from the admin panel.</p>
+  {% endif %}
+</section>
+{% endblock %}
